@@ -46,6 +46,6 @@ namespace LRR
   void Window::Present() {
     SDL_UpdateTexture(mTexture, nullptr, mSurface->pixels, mSurface->pitch);
     SDL_RenderCopy(mRenderer, mTexture, nullptr, nullptr);
-    //SDL_RenderPresent(mRenderer);
+    SDL_RenderPresent(mRenderer);
   }
 }

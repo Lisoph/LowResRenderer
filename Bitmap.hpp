@@ -48,8 +48,14 @@ namespace LRR
       inline void Clear(uint32_t color) {
         auto const max = mWidth * mHeight;
         for(int i = 0; i < max; ++i) {
-          //SetPixel(i, rand() << 16);
           SetPixel(i, color);
+        }
+      }
+
+      inline void ClearRandom(uint32_t shiftBits) {
+        auto const max = mWidth * mHeight;
+        for(int i = 0; i < max; ++i) {
+          SetPixel(i, rand() << shiftBits);
         }
       }
     private:

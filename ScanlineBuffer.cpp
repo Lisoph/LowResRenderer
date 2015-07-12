@@ -71,36 +71,26 @@ namespace LRR
       // c = max Y
 
       if(c(1) < b(1)) {
-        /*auto tmp = b;
-        b = c;
-        c = tmp;*/
         Swap(&c, &b);
       }
 
       if(b(1) < a(1)) {
-        /*auto tmp = a;
-        a = b;
-        b = tmp;*/
         Swap(&b, &a);
       }
 
       if(c(1) < b(1)) {
-        /*auto tmp = b;
-        b = c;
-        c = tmp;*/
         Swap(&c, &b);
       }
     }
 
     float ScanlineBuffer::TriangleHandedness(Vector2i const &b, Vector2i const &c) {
-      float const x1 = b(0);
-      float const y1 = b(1);
+      return float(b(0) * c(1) - c(0) * b(1));
+    }
 
-      float const x2 = c(0);
-      float const y2 = c(1);
-
-      //return float(b(0) * c(1) - c(0) * b(1));
-      return x1 * y2 - x2 * y1;
+    Vector2f TriangleCentroid(Vector2f const &a, Vector2f const &b, Vector2f const &c) {
+      float x = (a(0) + b(0) + c(0)) / 3.0f;
+      float y = (a(1) + b(1) + c(1)) / 3.0f;
+      return Vector2f{x, y};
     }
 
     ScanlineBuffer ScanlineBuffer::Triangle(Vector2i const &_a, Vector2i const &_b,
@@ -111,10 +101,14 @@ namespace LRR
       SortTriangleVertices(a, b, c);
 
       auto const height = c(1) - a(1) + a(1);
-      //auto const height = 1000;
       ScanlineBuffer slBuffer{height};
 
-      auto handedness = TriangleHandedness(b, c);
+      auto af = a.cast<float>();
+      auto bf = b.cast<float>();
+      auto cf = c.cast<float>();
+      auto center = TriangleCentroid(af, bf, cf);
+
+      auto handedness = TriangleHandedness((bf - center).cast<int>(), (cf - center).cast<int>());
       auto target1 = handedness >= 0 ? ScanlineLineTarget::Min : ScanlineLineTarget::Max;
       auto target2 = handedness >= 0 ? ScanlineLineTarget::Max : ScanlineLineTarget::Min;
 
