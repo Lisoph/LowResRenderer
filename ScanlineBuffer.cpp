@@ -39,7 +39,7 @@ namespace LRR
       float const stepX = distX / distY * Sign(float(x2 - x1));
 
       float x = float(x1);
-      for(int i = topY; i < bottomY && i < mHeight; ++i, x += stepX) {
+      for(int i = std::max(topY, 0); i < bottomY; ++i, x += stepX) {
         if(target == ScanlineLineTarget::Min) {
           mScanlines[i].min = int(x);
         }

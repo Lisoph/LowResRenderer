@@ -3,6 +3,8 @@
 #include <memory>
 #include <Eigen/Eigen>
 
+#include "Shader.hpp"
+
 namespace LRR
 {
   namespace Rendering
@@ -29,7 +31,9 @@ namespace LRR
       ScanlineBuffer(int height);
       ScanlineBuffer(ScanlineBuffer const &other);
       ScanlineBuffer(ScanlineBuffer && other);
-      ~ScanlineBuffer() = default;
+      ~ScanlineBuffer() {
+        auto *_this = this;
+      }
 
       inline int Height() const
       { return mHeight; }

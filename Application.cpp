@@ -23,14 +23,26 @@ namespace LRR
       if(event.type == SDL_QUIT) {
         Quit();
       }
-      else if(event.type == SDL_MOUSEWHEEL) {
-        mMouseWheelPos += event.wheel.y;
+      else if(event.type == SDL_KEYDOWN) {
+        if(event.key.keysym.sym == SDLK_ESCAPE) {
+          Quit();
+        }
       }
     }
   }
 
   void Application::Update() {
+    float distance = SDL_GetTicks() / 1000.0f;
+    float angle = Math::ToRadians(distance * 90);
+    mShader.ModelMatrix(Math::RotationMatrix(Eigen::AngleAxisf{angle, Eigen::Vector3f{0.0f, 1.0f, 0.0f}}));
+    
+    auto mat = mShader.ViewMatrix();
+    mat(14) = -5;
+    mShader.ViewMatrix(mat);
 
+    /*Eigen::Matrix4f mat = Eigen::Matrix4f::Identity();
+    mat(13) = distance;
+    mShader.ModelMatrix(mat);*/
   }
 
   void Application::Draw() {
@@ -53,7 +65,8 @@ namespace LRR
     static Eigen::Vector2i b2{0, 50};
     static Eigen::Vector2i c2{70, 100};
 
-    if(frame++ % 300 == 0) {
+    if(frame++ % 150 == 0) {
+#if 0
       a(0) = rand() % bitmap.Width();
       a(1) = rand() % bitmap.Height();
       b(0) = rand() % bitmap.Width();
@@ -67,10 +80,14 @@ namespace LRR
       b2(1) = rand() % bitmap.Height();
       c2(0) = rand() % bitmap.Width();
       c2(1) = rand() % bitmap.Height();
+#endif
+
     }
 
-    mRasterizer.DrawScanlineBuffer(0, 0, Rendering::ScanlineBuffer::Triangle(a, b, c));
-    mRasterizer.DrawScanlineBuffer(0, 0, Rendering::ScanlineBuffer::Triangle(a2, b2, c2));
+    //mRasterizer.DrawScanlineBuffer(0, 0, Rendering::ScanlineBuffer::Triangle(a, b, c));
+    //mRasterizer.DrawScanlineBuffer(0, 0, Rendering::ScanlineBuffer::Triangle(a2, b2, c2));
+
+    mRasterizer.DrawTriangle({0, 1, 0}, {-1, -1, 0}, {1, -1, 0}, mShader);
 
     for(int i = 0; i < max; ++i) {
       mWindow.Pixels()[i] = bitmap.GetPixel(i);

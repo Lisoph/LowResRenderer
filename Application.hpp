@@ -2,6 +2,7 @@
 
 #include "Window.hpp"
 #include "Rasterizer.hpp"
+#include "BasicShader.hpp"
 
 namespace LRR
 {
@@ -16,14 +17,6 @@ namespace LRR
     enum { SurfaceWidth = WindowWidth / PixelScale };
     enum { SurfaceHeight = WindowHeight / PixelScale };
 
-    //static constexpr float UpdateTimeStep = 16.0f;
-
-    /*static constexpr int PixelScale = 4;
-    static constexpr int WindowWidth = 640;
-    static constexpr int WindowHeight = 480;
-    static constexpr int SurfaceWidth = WindowWidth / PixelScale;
-    static constexpr int SurfaceHeight = WindowHeight / PixelScale;*/
-
     Application() {}
 
     void Run();
@@ -37,9 +30,9 @@ namespace LRR
 
     bool mRunning = true;
     float mSimulationTime = 0;
-    float mMouseWheelPos = 0;
     
     Window mWindow{WindowWidth, WindowHeight, SurfaceWidth, SurfaceHeight, "Low Res Software Renderer"};
     Rendering::Rasterizer mRasterizer{SurfaceWidth, SurfaceHeight};
+    Rendering::BasicShader mShader{float(SurfaceWidth) / (float)SurfaceHeight};
   };
 }

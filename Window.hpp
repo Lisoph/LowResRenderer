@@ -9,8 +9,14 @@ namespace LRR
   {
   public:
     WindowCreationException(std::string const &why)
-      : std::exception(why.c_str())
     {}
+
+    const char *what() const override {
+      return mWhy.c_str();
+    }
+
+  private:
+    std::string mWhy;
   };
 
   class Window final

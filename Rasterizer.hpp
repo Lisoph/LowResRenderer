@@ -2,11 +2,14 @@
 
 #include "Bitmap.hpp"
 #include "ScanlineBuffer.hpp"
+#include "Shader.hpp"
 
 namespace LRR
 {
   namespace Rendering
   {
+    using namespace Eigen;
+
     class Rasterizer final
     {
     private:
@@ -23,8 +26,10 @@ namespace LRR
         mFrameBuffer.Clear(color);
       }
 
-      void DrawScanlineBuffer(int x, int y, ScanlineBuffer const &slBuffer);
+      void DrawTriangle(Vector3f const &a, Vector3f const &b, Vector3f const &c, Shader &shader);
     private:
+      void DrawScanlineBuffer(int x, int y, ScanlineBuffer const &slBuffer, Shader &shader);
+
       BitmapT mFrameBuffer;
     };
   }
