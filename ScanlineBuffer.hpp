@@ -31,9 +31,6 @@ namespace LRR
       ScanlineBuffer(int height);
       ScanlineBuffer(ScanlineBuffer const &other);
       ScanlineBuffer(ScanlineBuffer && other);
-      ~ScanlineBuffer() {
-        auto *_this = this;
-      }
 
       inline int Height() const
       { return mHeight; }
@@ -46,7 +43,9 @@ namespace LRR
         mScanlines[y] = scanline;
       }
 
-      void DrawLine(int x1, int y1, int x2, int y2, ScanlineLineTarget target);
+      //void DrawLine(int x1, int y1, int x2, int y2, ScanlineLineTarget target);
+      void DrawLine(Eigen::Vector2i const &top, Eigen::Vector2i const &bottom,
+                    ScanlineLineTarget target);
 
       static ScanlineBuffer Rectangle(int width, int height);
       static ScanlineBuffer Triangle(Vector2i const &a, Vector2i const &b,

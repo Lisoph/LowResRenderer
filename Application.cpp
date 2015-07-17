@@ -35,14 +35,10 @@ namespace LRR
     float distance = SDL_GetTicks() / 1000.0f;
     float angle = Math::ToRadians(distance * 90);
     mShader.ModelMatrix(Math::RotationMatrix(Eigen::AngleAxisf{angle, Eigen::Vector3f{0.0f, 1.0f, 0.0f}}));
-    
-    auto mat = mShader.ViewMatrix();
-    mat(14) = -5;
-    mShader.ViewMatrix(mat);
 
-    /*Eigen::Matrix4f mat = Eigen::Matrix4f::Identity();
-    mat(13) = distance;
-    mShader.ModelMatrix(mat);*/
+    auto view = mShader.ViewMatrix();
+    view(14) = -10;
+    mShader.ViewMatrix(view);
   }
 
   void Application::Draw() {

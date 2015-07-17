@@ -12,9 +12,8 @@ namespace LRR
 
     VertexShaderOutput BasicShader::OnVertex() {
       Vector4f v4{mCurrentVertex(0), mCurrentVertex(1), mCurrentVertex(2), 1.0f};
-      //auto mvp = mModelMatrix * mViewMatrix * mProjectionMatrix;
-      //auto mvp = mProjectionMatrix * mViewMatrix * mModelMatrix;
-      return {mProjectionMatrix * mViewMatrix * mModelMatrix * v4};
+      auto mvp = mProjectionMatrix * mViewMatrix * mModelMatrix;
+      return {mvp * v4};
     }
 
     FragmentShaderOutput BasicShader::OnFragment() {

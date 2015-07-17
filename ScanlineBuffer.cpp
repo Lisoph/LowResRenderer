@@ -27,6 +27,7 @@ namespace LRR
       return x >= 0.0f ? 1.0f : -1.0f;
     }
 
+#if 0
     void ScanlineBuffer::DrawLine(int x1, int y1, int x2, int y2, ScanlineLineTarget target) {
       int const height = std::abs(y1 - y2);
       int const topY = std::min(y1, y2);
@@ -39,13 +40,47 @@ namespace LRR
       float const stepX = distX / distY * Sign(float(x2 - x1));
 
       float x = float(x1);
-      for(int i = std::max(topY, 0); i < bottomY; ++i, x += stepX) {
+      for(int i = std::max(topY, 0); i < bottomY && i - topY < mHeight; ++i, x += stepX) {
+        //auto index = i - topY;
+        auto index = i;
         if(target == ScanlineLineTarget::Min) {
-          mScanlines[i].min = int(x);
+          mScanlines[index].min = int(x);
         }
         else if(target == ScanlineLineTarget::Max) {
-          mScanlines[i].max = int(x);
+          mScanlines[index].max = int(x);
         }
+      }
+    }
+#endif
+
+    void ScanlineBuffer::DrawLine(Vector2i const &top, Vector2i const &bottom, ScanlineLineTarget target) {
+      int const yStart = top(1);
+      int const yEnd = bottom(1);
+      int const xStart = top(0);
+      int const xEnd = bottom(0);
+
+      int const yDist = yEnd - yStart;
+      int const xDist = xEnd - xStart;
+
+      if(yDist <= 0) {
+        return;
+      }
+
+      float xStep = float(xDist) / float(yDist) /** Sign(bottom(0) - top(0))*/;
+      int topSkip = (yStart < 0 ? -yStart : 0);
+      float x = float(xStart) + topSkip * xStep;
+
+      for(int i = std::max(yStart, 0); i < yEnd; ++i) {
+        auto index = std::min(i, mHeight - 1);
+        //auto index = i;
+        if(target == ScanlineLineTarget::Min) {
+          mScanlines[index].min = int(x);
+        }
+        else if(target == ScanlineLineTarget::Max) {
+          mScanlines[index].max = int(x);
+        }
+
+        x += xStep;
       }
     }
 
@@ -100,7 +135,7 @@ namespace LRR
       Vector2i c{_c};
       SortTriangleVertices(a, b, c);
 
-      auto const height = c(1) - a(1) + a(1);
+      auto const height = c(1);
       ScanlineBuffer slBuffer{height};
 
       auto af = a.cast<float>();
@@ -112,9 +147,14 @@ namespace LRR
       auto target1 = handedness >= 0 ? ScanlineLineTarget::Min : ScanlineLineTarget::Max;
       auto target2 = handedness >= 0 ? ScanlineLineTarget::Max : ScanlineLineTarget::Min;
 
+#if 0
       slBuffer.DrawLine(a(0), a(1), c(0), c(1), target1);
       slBuffer.DrawLine(a(0), a(1), b(0), b(1), target2);
       slBuffer.DrawLine(b(0), b(1), c(0), c(1), target2);
+#endif
+      slBuffer.DrawLine(a, c, target1);
+      slBuffer.DrawLine(a, b, target2);
+      slBuffer.DrawLine(b, c, target2);
 
       return slBuffer;
     }
