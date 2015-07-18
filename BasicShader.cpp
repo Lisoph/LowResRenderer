@@ -1,5 +1,9 @@
 #include "BasicShader.hpp"
 
+#include <SDL.h>
+
+#include "math.hpp"
+
 namespace LRR
 {
   namespace Rendering
@@ -17,7 +21,13 @@ namespace LRR
     }
 
     FragmentShaderOutput BasicShader::OnFragment() {
-      return {{1, 0, 0}};
+      float time = SDL_GetTicks() / 1000.0f;
+
+      float r = mFragCoord(0) + 1 / 2.0f;
+      float g = (std::sin(Math::ToRadians(time * 180)) + 1 / 2.0f) * 0.3f;
+      float b = mFragCoord(1) + 1 / 2.0f;
+
+      return {{r, g, b}};
     }
   }
 }

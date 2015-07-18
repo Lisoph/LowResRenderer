@@ -6,14 +6,16 @@ namespace LRR
 {
   namespace Rendering
   {
+    using namespace Eigen;
+
     struct VertexShaderOutput
     {
-      Eigen::Vector4f vertexPosition;
+      Vector4f vertexPosition;
     };
 
     struct FragmentShaderOutput
     {
-      Eigen::Vector3f fragmentColor;
+      Vector3f fragmentColor;
     };
 
     class Shader
@@ -26,13 +28,20 @@ namespace LRR
       virtual VertexShaderOutput OnVertex() = 0;
       virtual FragmentShaderOutput OnFragment() = 0;
 
-      inline Eigen::Vector3f const &CurrentVertex() const
+      inline Vector3f const &CurrentVertex() const
       { return mCurrentVertex; }
       
-      inline void CurrentVertex(Eigen::Vector3f const &vertex)
+      inline void CurrentVertex(Vector3f const &vertex)
       { mCurrentVertex = vertex; }
+
+      inline Vector2f const &FragCoord() const
+      { return mFragCoord; }
+
+      inline void FragCoord(Vector2f const &fragCoord)
+      { mFragCoord = fragCoord; }
     protected:
-      Eigen::Vector3f mCurrentVertex;
+      Vector3f mCurrentVertex;
+      Vector2f mFragCoord;
     };
   }
 }

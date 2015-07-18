@@ -37,53 +37,18 @@ namespace LRR
     mShader.ModelMatrix(Math::RotationMatrix(Eigen::AngleAxisf{angle, Eigen::Vector3f{0.0f, 1.0f, 0.0f}}));
 
     auto view = mShader.ViewMatrix();
-    view(14) = -10;
+    view(14) = -7;
     mShader.ViewMatrix(view);
   }
 
   void Application::Draw() {
+    mRasterizer.Clear(0x89CFF0);
+    mRasterizer.DrawTriangle({0, 1, 0}, {-1, -1, 0}, {1, -1, 0}, mShader);
+
     auto &bitmap = mRasterizer.Bitmap();
     int width, height;
     mWindow.SurfaceSize(width, height);
     int const max = width * height;
-    int windowWidth, windowHeight;
-    mWindow.WindowSize(windowWidth, windowHeight);
-
-    static int frame = 0;
-
-    mRasterizer.Clear(0x89CFF0);
-    
-    static Eigen::Vector2i a{50, 0};
-    static Eigen::Vector2i b{0, 50};
-    static Eigen::Vector2i c{70, 100};
-
-    static Eigen::Vector2i a2{50, 0};
-    static Eigen::Vector2i b2{0, 50};
-    static Eigen::Vector2i c2{70, 100};
-
-    if(frame++ % 150 == 0) {
-#if 0
-      a(0) = rand() % bitmap.Width();
-      a(1) = rand() % bitmap.Height();
-      b(0) = rand() % bitmap.Width();
-      b(1) = rand() % bitmap.Height();
-      c(0) = rand() % bitmap.Width();
-      c(1) = rand() % bitmap.Height();
-
-      a2(0) = rand() % bitmap.Width();
-      a2(1) = rand() % bitmap.Height();
-      b2(0) = rand() % bitmap.Width();
-      b2(1) = rand() % bitmap.Height();
-      c2(0) = rand() % bitmap.Width();
-      c2(1) = rand() % bitmap.Height();
-#endif
-
-    }
-
-    //mRasterizer.DrawScanlineBuffer(0, 0, Rendering::ScanlineBuffer::Triangle(a, b, c));
-    //mRasterizer.DrawScanlineBuffer(0, 0, Rendering::ScanlineBuffer::Triangle(a2, b2, c2));
-
-    mRasterizer.DrawTriangle({0, 1, 0}, {-1, -1, 0}, {1, -1, 0}, mShader);
 
     for(int i = 0; i < max; ++i) {
       mWindow.Pixels()[i] = bitmap.GetPixel(i);

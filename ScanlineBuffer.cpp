@@ -23,11 +23,11 @@ namespace LRR
       mScanlines(std::move(other.mScanlines))
     {}
 
+#if 0
     inline float Sign(float x) {
       return x >= 0.0f ? 1.0f : -1.0f;
     }
 
-#if 0
     void ScanlineBuffer::DrawLine(int x1, int y1, int x2, int y2, ScanlineLineTarget target) {
       int const height = std::abs(y1 - y2);
       int const topY = std::min(y1, y2);
@@ -66,13 +66,12 @@ namespace LRR
         return;
       }
 
-      float xStep = float(xDist) / float(yDist) /** Sign(bottom(0) - top(0))*/;
-      int topSkip = (yStart < 0 ? -yStart : 0);
+      float xStep = float(xDist) / float(yDist);
+      int topSkip = (yStart < 0 ? -yStart : 0); // TODO: Add skip for unnecessary padding between 0 and top(1)
       float x = float(xStart) + topSkip * xStep;
 
       for(int i = std::max(yStart, 0); i < yEnd; ++i) {
         auto index = std::min(i, mHeight - 1);
-        //auto index = i;
         if(target == ScanlineLineTarget::Min) {
           mScanlines[index].min = int(x);
         }

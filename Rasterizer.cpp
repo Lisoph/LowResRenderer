@@ -1,5 +1,7 @@
 #include "Rasterizer.hpp"
 
+#include "util.hpp"
+
 namespace LRR
 {
   namespace Rendering
@@ -18,10 +20,14 @@ namespace LRR
           int destX = x + r;
 
           if(destX >= 0 && destX < mFrameBuffer.Width()) {
+            float fragX = float(destX) / (mFrameBuffer.Width() / 2.0f) - 1;
+            float fragY = (mFrameBuffer.Height() - float(destY)) / (mFrameBuffer.Height() / 2.0f) - 1;
+            shader.FragCoord({fragX, fragY});
+
             auto fragColor = shader.OnFragment().fragmentColor;
-            auto red = uint32_t(fragColor(0) * 255);
-            auto green = uint32_t(fragColor(1) * 255);
-            auto blue = uint32_t(fragColor(2) * 255);
+            auto red = uint32_t(Util::Clamp(fragColor(0) * 255, 0.0f, 255.0f));
+            auto green = uint32_t(Util::Clamp(fragColor(1) * 255, 0.0f, 255.0f));
+            auto blue = uint32_t(Util::Clamp(fragColor(2) * 255, 0.0f, 255.0f));
             mFrameBuffer.SetPixel(destX, destY, (red << 24) | (green << 16) | (blue << 8) | 0xFF);
           }
         }
