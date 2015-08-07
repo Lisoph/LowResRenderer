@@ -11,13 +11,11 @@ namespace LRR
   public:
     static const float UpdateTimeStep;
 
-    enum { PixelScale = 4 };
-    enum { WindowWidth = 640 };
-    enum { WindowHeight = 480 };
-    enum { SurfaceWidth = WindowWidth / PixelScale };
-    enum { SurfaceHeight = WindowHeight / PixelScale };
-
-    Application() {}
+    static constexpr unsigned PixelScale = 4;
+    static constexpr unsigned WindowWidth = 640;
+    static constexpr unsigned WindowHeight = 480;
+    static constexpr unsigned SurfaceWidth = WindowWidth / PixelScale;
+    static constexpr unsigned SurfaceHeight = WindowHeight / PixelScale;
 
     void Run();
   private:
@@ -30,6 +28,7 @@ namespace LRR
 
     bool mRunning = true;
     float mSimulationTime = 0;
+    float mScroll = 0;
     
     Window mWindow{WindowWidth, WindowHeight, SurfaceWidth, SurfaceHeight, "Low Res Software Renderer"};
     Rendering::Rasterizer mRasterizer{SurfaceWidth, SurfaceHeight};

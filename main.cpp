@@ -1,3 +1,11 @@
+#include <cstdio>
+
+// Visual Studio 2015 workaround
+extern "C" FILE *__iob_func() {
+  static FILE files[] = {*(stdin), *(stdout), *(stderr)};
+  return files;
+}
+
 #include <SDL.h>
 
 #include "Application.hpp"

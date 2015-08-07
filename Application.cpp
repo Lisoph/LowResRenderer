@@ -14,6 +14,7 @@ namespace LRR
       }
 
       Draw();
+      SDL_Delay(16);
     }
   }
 
@@ -28,6 +29,9 @@ namespace LRR
           Quit();
         }
       }
+      else if(event.type == SDL_MOUSEWHEEL) {
+        mScroll += event.wheel.y;
+      }
     }
   }
 
@@ -37,7 +41,7 @@ namespace LRR
     mShader.ModelMatrix(Math::RotationMatrix(Eigen::AngleAxisf{angle, Eigen::Vector3f{0.0f, 1.0f, 0.0f}}));
 
     auto view = mShader.ViewMatrix();
-    view(14) = -7;
+    view(14) = -7 + mScroll * 0.1f;
     mShader.ViewMatrix(view);
   }
 
